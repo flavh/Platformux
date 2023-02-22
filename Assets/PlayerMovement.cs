@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 direction;
     private bool jump;
     private bool canJump = true;
+    private bool dead;
     private Rigidbody2D rigidBody;
     private Animator anim;
     private SpriteRenderer sr;
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dead) return;
         direction = new Vector2(0, 0);
         if (Input.GetKeyDown(KeyCode.Z)) jump = true;
         if (Input.GetKeyUp(KeyCode.Z)) jump = false;
@@ -51,6 +53,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground")) canJump = true;
+        if (col.gameObject.CompareTag("Enemy"))
+        {
+            dead = true;
+            anim.SetBool("isDead", true);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D other)
